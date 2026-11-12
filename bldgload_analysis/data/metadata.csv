@@ -340,7 +340,7 @@ building,source,Model Source,Climate,Construction Year,Building Type,City,Floor 
 179,measured,measured,3B,2020s,Academic,SanFrancisco,11000,CAISO,12
 180,measured,measured,3C,2020s,Academic,SanFrancisco,1000,CAISO,12
 181,measured,measured,3B,2020s,Academic,SanFrancisco,5000,CAISO,12
-182,measured,measured,4A,2000s,Academic,Portland,10000,PJM_East,N/A
+182,measured,measured,4A,2000s,Academic,Louisville,10000,PJM_East,N/A
 183,measured,measured,3C,2000s,Office,SanFrancisco,19000,CAISO,3
 184,measured,measured,3C,NA,Warehouse,SanFrancisco,10000,CAISO,3
 185,measured,measured,3C,NA,Warehouse,SanFrancisco,4000,CAISO,3
