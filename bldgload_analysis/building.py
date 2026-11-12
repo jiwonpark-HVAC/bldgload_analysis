@@ -14,14 +14,14 @@ from .metrics import COP, clean_cop, metrics
 Input_aliases = {
     "heating": "hhw_load", "cooling": "chw_load", "heating_load": "hhw_load", "cooling_load": "chw_load",
     "hw_load": "hhw_load", "hw_sup": "hhw_sup", "hw_ret": "hhw_ret", "hw_flow": "hhw_flow",
-    "datetime": "timestamp", "time": "timestamp", "t_out": "oat", "oat_temp": "oat", "rh": "rh_out", "rh_out_pct": "rh_out",
+    "datetime": "timestamp", "time": "timestamp", "t_out": "oat", "oat_temp": "oat", "rh": "rh_pct", "rh_out": "rh_pct", "rh_out_pct": "rh_pct",
 }
 Base_quantity = {"hhw_load": "load", "chw_load": "load", "hhw_sup": "temp", "hhw_ret": "temp", "chw_sup": "temp", "chw_ret": "temp",
                  "hhw_flow": "flow", "chw_flow": "flow", "oat": "temp"}
 Si_suffix = {"load": "W", "temp": "C", "flow": "Lps"}
 Loop_input = {"hhw": ["hhw_load_W", "hhw_sup_C", "hhw_ret_C", "hhw_flow_Lps"],
               "chw": ["chw_load_W", "chw_sup_C", "chw_ret_C", "chw_flow_Lps"]}
-Hourly_cols = ["timestamp", "heating_W", "cooling_W", "oat_C", "rh_out_pct", "oper_hhw", "oper_chw",
+Hourly_cols = ["timestamp", "heating_W", "cooling_W", "oat_C", "rh_pct", "oper_hhw", "oper_chw",
                "hhw_sup_C", "hhw_ret_C", "hhw_flow_Lps", "hhw_temp_valid",
                "chw_sup_C", "chw_ret_C", "chw_flow_Lps", "chw_temp_valid"]
 Meta_keys = ["name", "floor_area_m2", "building_type", "city", "climate", "construction_year", "source",
@@ -49,8 +49,8 @@ def read_input(path, unit_system="SI") -> pd.DataFrame:
             q = Base_quantity[base]
             df[c] = units_mod.to_si(pd.to_numeric(df[c], errors="coerce"), q, u or unit_system)
             rename[c] = f"{base}_{Si_suffix[q]}"
-        elif base == "rh_out":
-            rename[c] = "rh_out_pct"
+        elif base == "rh_pct":
+            rename[c] = "rh_pct"
         else:
             rename[c] = base
     df = df.rename(columns=rename)
@@ -107,7 +107,7 @@ class Building:
     Make one with Building.from_csv (your own data), Building.from_example (one of the example buildings) or
     Building.load (a folder written by save).
 
-    hourly   DataFrame, one row per hour, always in SI: timestamp, heating_W, cooling_W, oat_C, rh_out_pct,
+    hourly   DataFrame, one row per hour, always in SI: timestamp, heating_W, cooling_W, oat_C, rh_pct,
              oper_hhw, oper_chw, the loop temperatures and flows, and the emission factor columns
     meta     dict with the name, floor area, units, location and the other building information
     """
@@ -171,7 +171,7 @@ class Building:
             try:
                 w = lookup.get_weather(loc["latitude"], raw["timestamp"].min(), raw["timestamp"].max(),
                                    longitude=loc["longitude"], timezone=loc.get("timezone") or "UTC")
-                raw = raw.drop(columns=[c for c in ("oat_C", "rh_out_pct") if c in raw]).merge(w, on="timestamp", how="left")
+                raw = raw.drop(columns=[c for c in ("oat_C", "rh_pct") if c in raw]).merge(w, on="timestamp", how="left")
                 meta["weather_source"] = "Open-Meteo archive"
             except Exception as e:
                 warnings.warn(f"weather download failed, oat_C left empty: {e}")
@@ -204,7 +204,7 @@ class Building:
                                   "temp_valid": f"{lp}_temp_valid"})
             d = d[[c for c in Hourly_cols if c in d]]
             h = d if h is None else h.merge(d, on="timestamp", how="outer")
-        for c in ("oat_C", "rh_out_pct"):
+        for c in ("oat_C", "rh_pct"):
             if c in raw:
                 w = raw[["timestamp", c]].copy()
                 w["timestamp"] = w["timestamp"].dt.floor("h")

@@ -1,7 +1,7 @@
 """The example buildings: the buildings of the Berkeley Decarb Tool dataset, which ships with the package.
 
 Three files kept inside the package under bldgload_analysis/data:
-  all_buildings_data_public.parquet   building, timestamp, heating_W, cooling_W, t_out_C, rh_pct, AER and LRMER factors
+  all_buildings_data_public.parquet   building, timestamp, heating_W, cooling_W, oat_C, rh_pct, AER and LRMER factors
   metadata.csv                 one row per building
   load_summary.csv             the 43 metrics per building, the reference for dataset_position
 An optional emission_factors_month_hour.csv (gea, month, hour, factors) fills buildings whose parquet rows have none.
@@ -19,8 +19,8 @@ Pointer = Cache_dir / "examples.json"
 Bundled = Path(__file__).parent / "data"
 Data_files = ("all_buildings_data_public.parquet", "all_buildings_data_public.csv")
 Table_files = ("metadata.csv", "load_summary.csv")
-# column names in the dataset files and the names the package uses
-Column_names = {"t_out_C": "oat_C", "rh_pct": "rh_out_pct", "oper_hw": "oper_hhw", "hw_sup_C": "hhw_sup_C", "hw_ret_C": "hhw_ret_C",
+# older column names in the dataset files and the names the package uses
+Column_names = {"t_out_C": "oat_C", "oper_hw": "oper_hhw", "hw_sup_C": "hhw_sup_C", "hw_ret_C": "hhw_ret_C",
              "hw_flow_Lps": "hhw_flow_Lps", "hw_temp_inversion": "hhw_temp_inversion", "hw_temp_valid": "hhw_temp_valid"}
 Meta_columns = {"Building Type": "building_type", "City": "city", "Climate": "climate", "Construction Year": "construction_year",
                 "Floor Area (m2)": "floor_area_m2", "Model Source": "model_source", "State": "state", "GEA": "grid_region", "Grid Region": "grid_region"}

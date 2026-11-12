@@ -58,8 +58,8 @@ One CSV with hourly or finer time steps.
 | `hhw_sup`, `hhw_ret`, `hhw_flow` | C, C, L/s | F, F, gpm | optional |
 | `chw_load` | W | Btu/h | cooling loop, or give sup, ret and flow |
 | `chw_sup`, `chw_ret`, `chw_flow` | C, C, L/s | F, F, gpm | optional |
-| `oat` | C | F | optional, filled from the location when missing |
-| `rh_out` | % | % | optional, carried through |
+| `oat` | C | F | outdoor air temperature. Optional, filled from the location when missing |
+| `rh_pct` | % | % | optional, carried through. `rh` and `rh_out` are read as well |
 
 `units="SI"` or `"IP"` says which system the file is in. A column can also carry its own unit as a
 suffix, and then the suffix wins. The suffixes are `_W`, `_kW`, `_Btuh`, `_kBtuh`, `_C`, `_F`, `_Lps`

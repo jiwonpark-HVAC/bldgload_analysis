@@ -60,7 +60,7 @@ def get_weather(place, start, end, longitude=None, timezone="UTC"):
               "hourly": "temperature_2m,relative_humidity_2m", "timezone": "GMT"}
     h = _get_json(Archive_url, params)["hourly"]
     w = pd.DataFrame({"timestamp": pd.to_datetime(h["time"]) + pd.Timedelta(hours=offset),
-                      "oat_C": h["temperature_2m"], "rh_out_pct": h["relative_humidity_2m"]})
+                      "oat_C": h["temperature_2m"], "rh_pct": h["relative_humidity_2m"]})
     return w[(w["timestamp"] >= start) & (w["timestamp"] <= end)].reset_index(drop=True)
 
 
