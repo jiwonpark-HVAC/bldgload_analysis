@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bldgload_analysis"
+version = "0.1.0"
+description = "Heating and cooling load metrics, a one page report and figures for a building with hydronic HVAC"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [{name = "Jiwon Park"}]
+dependencies = ["pandas>=2.0", "numpy>=1.24", "matplotlib>=3.7", "pyarrow>=14"]
+
+[project.urls]
+Repository = "https://github.com/jiwonpark-HVAC/bldgload_analysis"
+
+[tool.setuptools.packages.find]
+include = ["bldgload_analysis*"]
+
+[tool.setuptools.package-data]
+bldgload_analysis = ["data/*.csv", "data/*.parquet"]

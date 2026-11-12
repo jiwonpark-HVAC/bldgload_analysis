@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+Building_user_*/
+.bldgload_analysis/
+.DS_Store
+.venv/
+build/
+dist/
+*.pdf
+*.png
