@@ -6,33 +6,52 @@ W_per_btuh = 0.29307107
 Ft2_per_m2 = 10.76391
 Gpm_per_lps = 15.850323
 
+W_per_ton = 3516.85            # ton of refrigeration
+
 # column suffixes the reader understands, and the unit each one means
 Suffix_units = {"W": ("load", "SI"), "Btuh": ("load", "IP"), "C": ("temp", "SI"), "F": ("temp", "IP"),
                 "Lps": ("flow", "SI"), "gpm": ("flow", "IP")}
-Kilo_suffix = {"kW": "W", "kBtuh": "Btuh"}      # read as 1000 times the unit
-Suffix_spelling = {k.lower(): k for k in [*Suffix_units, *Kilo_suffix]}
+# other ways to write a unit: the suffix above it is converted to, and the factor to multiply by.
+# kg/s is read as L/s, water at 1 kg per litre as in the load calculation.
+Other_units = {
+    "W":    {"kW": 1e3, "MW": 1e6, "ton": W_per_ton, "tons": W_per_ton},
+    "Btuh": {"Btu/h": 1, "Btu/hr": 1, "Btuhr": 1, "kBtuh": 1e3, "kBtu/h": 1e3, "kBtu/hr": 1e3, "kBtuhr": 1e3, "MBH": 1e3},
+    "C":    {"degC": 1},
+    "F":    {"degF": 1},
+    "Lps":  {"L/s": 1, "kg/s": 1, "kgps": 1, "m3/s": 1e3, "m3ps": 1e3, "m3/h": 1 / 3.6, "m3/hr": 1 / 3.6, "m3ph": 1 / 3.6,
+             "L/min": 1 / 60, "Lpm": 1 / 60},
+    "gpm":  {"gal/min": 1},
+}
+Suffix_factor = {k.lower(): (k, 1) for k in Suffix_units}
+Suffix_factor.update({alias.lower(): (unit, factor) for unit, aliases in Other_units.items() for alias, factor in aliases.items()})
 
 
 def _suffix(name):
-    """'hhw_load_kw' -> ('hhw_load', 'kW'), the suffix in its usual spelling, or (name, None)."""
-    m = re.fullmatch(r"(.+?)_([A-Za-z]+)", name)
-    suffix = Suffix_spelling.get(m.group(2).lower()) if m else None
-    return (m.group(1), suffix) if suffix else (name, None)
+    """'hhw_load_kw' or 'hhw_load [kW]' -> ('hhw_load', 'W', 1000): the name, the unit suffix and the factor.
+
+    A name with no unit the reader knows comes back as (name, None, 1). The unit is read in any case.
+    """
+    m = re.fullmatch(r"(.+?)\s*\[\s*([^\]\s]+)\s*\]", name) or re.fullmatch(r"(.+?)_([A-Za-z0-9/]+)", name)
+    found = Suffix_factor.get(m.group(2).lower()) if m else None
+    return (m.group(1), *found) if found else (name, None, 1)
 
 
 def split_column(name):
     """'hhw_sup_F' -> ('hhw_sup', 'temp', 'IP'); 'hhw_sup' -> ('hhw_sup', None, None). The suffix is read in any case."""
-    base, suffix = _suffix(name)
-    if suffix in Suffix_units:
+    base, suffix, _ = _suffix(name)
+    if suffix:
         return base, *Suffix_units[suffix]
     return name, None, None
 
 
-def kilo_column(name):
-    """'hhw_load_kW' -> ('hhw_load_W', 1000). Any other name comes back as it is, with factor 1."""
-    base, suffix = _suffix(name)
-    if suffix in Kilo_suffix:
-        return f"{base}_{Kilo_suffix[suffix]}", 1000
+def standard_column(name):
+    """'hhw_load_kW' -> ('hhw_load_W', 1000), 'chw_flow [m3/h]' -> ('chw_flow_Lps', 0.2778).
+
+    Any name that already has one of the Suffix_units, or no unit, comes back as it is with factor 1.
+    """
+    base, suffix, factor = _suffix(name)
+    if suffix and f"{base}_{suffix}".lower() != name.lower():
+        return f"{base}_{suffix}", factor
     return name, 1
 
 

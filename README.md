@@ -62,7 +62,7 @@ Provide a CSV file with hourly or subhourly data.
 | `oat` | °C | °F | Outdoor air temperature. Optional; retrieved using the building location if not provided |
 | `rh_pct` | % | % | Optional; retained in the output. Also accepts `rh` and `rh_out` as column names |
 
-Set `units="SI"` or `"IP"` to specify the input file’s unit system. Individual columns can use a unit suffix to override this setting. Supported suffixes are `_W`, `_kW`, `_Btuh`, `_kBtuh`, `_C`, `_F`, `_Lps`, and `_gpm`, for example, `hhw_load_kW` or `oat_F`.
+Set `units="SI"` or `"IP"` to specify the input file’s unit system. Individual columns can use a unit suffix to override this setting. The unit can be a suffix, as in `hhw_load_kW` or `oat_F`, or in brackets, as in `chw_flow [m3/h]`. Common units are read. Load: `W`, `kW`, `MW`, `ton`, `Btu/h`, `kBtu/h`, `MBH`. Flow: `L/s`, `m3/s`, `m3/h`, `kg/s`, `L/min`, `gpm`. Temperature: `C`, `F`. The full list is at the top of `bldgload_analysis/units.py`.
 
 Column names are case-insensitive. The load columns also accept `heating` and `cooling` as alternatives to `hhw_load` and `chw_load`, respectively. Missing columns are treated as unmeasured variables. When only load data is provided, operating hours are defined as hours with a positive load.
 

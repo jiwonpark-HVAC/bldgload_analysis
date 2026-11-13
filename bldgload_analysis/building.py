@@ -31,14 +31,15 @@ Meta_keys = ["name", "floor_area_m2", "building_type", "city", "climate", "const
 def read_input(path, unit_system="SI") -> pd.DataFrame:
     """Read the CSV and return it in SI with the package column names.
 
-    A unit suffix on a column (hhw_load_Btuh, hhw_load_kW, hhw_sup_F, hhw_flow_gpm, oat_F) says what that column is in.
-    Without a suffix the unit_system argument decides. Column names are read in any case.
+    A unit on a column says what that column is in: hhw_load_kW, hhw_sup_F, hhw_flow_gpm, oat_F, or in brackets as in
+    "chw_flow [m3/h]". units.Suffix_units and units.Other_units list the units. Without a unit the unit_system argument
+    decides. Column names are read in any case.
     """
     df = pd.read_csv(path)
     df.columns = [c.strip() for c in df.columns]
-    for c in list(df.columns):                   # kW and kBtuh columns become W and Btuh
-        name, factor = units_mod.kilo_column(c)
-        if factor != 1:
+    for c in list(df.columns):                   # other spellings and multiples become W, Btuh, C, F, Lps or gpm
+        name, factor = units_mod.standard_column(c)
+        if name != c:
             df[name] = pd.to_numeric(df[c], errors="coerce") * factor
             df = df.drop(columns=c)
     rename = {}
