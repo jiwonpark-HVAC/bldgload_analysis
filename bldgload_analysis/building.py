@@ -372,7 +372,6 @@ class Building:
         reference   the buildings to compare with in the "position in the dataset" panel
                     None                                  every example building
                     building.example_buildings(...)       only those example buildings, a list of building ids works too
-                    a load_summary.csv or its table       the buildings of your own dataset
         page        (width, height) in inches. US letter landscape by default, (16.54, 11.69) is A3
         """
         from .report import build_report

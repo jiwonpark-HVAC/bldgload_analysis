@@ -1,4 +1,5 @@
 # bldgload_analysis
+
 A Python package for analyzing building heating and cooling loads. Starting with your building’s load data, the package:
 
 - Cleans and standardizes the raw load data for analysis.
@@ -15,7 +16,7 @@ The package also includes a mix of measured and simulated load data from 373 com
 pip install git+https://github.com/jiwonpark-HVAC/bldgload_analysis.git
 ```
 
-It needs Python 3.10 or later. pandas, numpy, matplotlib and pyarrow are installed with it.
+Requires Python 3.10 or later. Dependencies (pandas, numpy, matplotlib, and pyarrow) are installed automatically.
 
 ## Use
 
@@ -24,10 +25,10 @@ from bldgload_analysis import Building
 
 building = Building.from_csv(
     "building.csv",
-    name="Hospital",                 # Building_user_Hospital, None gives Building_user_1, _2, ...
+    name="Hospital",                 # Sets the ID to Building_user_Hospital; None assigns a numbered ID (e.g. Building_user_1)
     floor_area=9000,
     area_unit="m2",                  # "m2" or "ft2"
-    units="SI",                      # "SI" (W, C, L/s) or "IP" (Btu/h, F, gpm) for the file, outputs follow
+    units="SI",                      # Input and output units: "SI" (W, C, L/s) or "IP" (Btu/h, F, gpm)
     building_type="Hospital",
     city="San Francisco",
     climate="3C",
@@ -41,89 +42,89 @@ building.save()                                    # Building_user_Hospital/hour
 building.report("report.pdf")                      # US letter landscape, page=(16.54, 11.69) for A3
 building.figures                                   # figure names
 ax = building.plot("heat_recovery_capacity")       # matplotlib Axes
-building = Building.load("Building_user_Hospital") # back from the saved folder
+building = Building.load("Building_user_Hospital") # Load from the saved folder
 ```
 
-`example/run.py` is a filled in template.
-
-The metrics table has 43 rows. Six of them are grid metrics, so it has 37 rows when no emission factors
-are found.
+see `example/run.py` for a complete usage example.
+The metrics table contains 43 rows, including six grid-related metrics. When emission factors are unavailable, the table contains 37 rows.
 
 ## Input file
 
-One CSV with hourly or finer time steps.
+Provide a CSV file with hourly or subhourly data.
 
-| column | SI | IP | needed |
+| Column | SI | IP | Required / notes |
 |---|---|---|---|
-| `timestamp` | local standard time | | yes |
-| `hhw_load` | W | Btu/h | heating loop, or give sup, ret and flow |
-| `hhw_sup`, `hhw_ret`, `hhw_flow` | C, C, L/s | F, F, gpm | optional |
-| `chw_load` | W | Btu/h | cooling loop, or give sup, ret and flow |
-| `chw_sup`, `chw_ret`, `chw_flow` | C, C, L/s | F, F, gpm | optional |
-| `oat` | C | F | outdoor air temperature. Optional, filled from the location when missing |
-| `rh_pct` | % | % | optional, carried through. `rh` and `rh_out` are read as well |
+| `timestamp` | local standard time | local standard time | Required |
+| `hhw_load` | W | Btu/h | Heating load. Required unless supply temperature, return temperature, and flow rate are provided |
+| `hhw_sup`, `hhw_ret`, `hhw_flow` | °C, °C, L/s | °F, °F, gpm | Optional when `hhw_load` is provided; otherwise, all three are required to calculate the heating load |
+| `chw_load` | W | Btu/h | Cooling load. Required unless supply temperature, return temperature, and flow rate are provided |
+| `chw_sup`, `chw_ret`, `chw_flow` | °C, °C, L/s | °F, °F, gpm | Optional when `chw_load` is provided; otherwise, all three are required to calculate the cooling load |
+| `oat` | °C | °F | Outdoor air temperature. Optional; retrieved using the building location if not provided |
+| `rh_pct` | % | % | Optional; retained in the output. Also accepts `rh` and `rh_out` as column names |
 
-`units="SI"` or `"IP"` says which system the file is in. A column can also carry its own unit as a
-suffix, and then the suffix wins. The suffixes are `_W`, `_kW`, `_Btuh`, `_kBtuh`, `_C`, `_F`, `_Lps`
-and `_gpm`, as in `hhw_load_kW` or `oat_F`. Names are read in any case. `heating` and `cooling` are
-accepted for the two load columns. A missing column is treated as not measured. With loads only,
-operating hours are the hours with a positive load.
+Set `units="SI"` or `"IP"` to specify the input file’s unit system. Individual columns can use a unit suffix to override this setting. Supported suffixes are `_W`, `_kW`, `_Btuh`, `_kBtuh`, `_C`, `_F`, `_Lps`, and `_gpm`, for example, `hhw_load_kW` or `oat_F`.
 
-A record shorter than one year still runs. The annual values are then scaled up from the hours
-available, a warning is shown, and the report says so in its header.
+Column names are case-insensitive. The load columns also accept `heating` and `cooling` as alternatives to `hhw_load` and `chw_load`, respectively. Missing columns are treated as unmeasured variables. When only load data is provided, operating hours are defined as hours with a positive load.
+
+Records shorter than one year can also be analyzed. Annual values are estimated by scaling the available data to a full year. A warning is displayed, and the report header indicates that the record covers less than one year.
 
 ## Cleaning
 
-Each loop goes through these steps before the metrics are computed.
+Before calculating the metrics, the package cleans each loop’s data. Invalid readings are treated as missing (N/A), while readings considered to represent zero are set to zero.
 
-1. A small negative flow, or a negative flow while the plant is idle, is set to zero. Other negative flow is removed.
-2. Temperatures, flow and measured load outside their plausible range are removed.
-3. A run of nine or more identical readings is removed as a stuck sensor. Flow and load are always
-   checked. A temperature is checked only when its sensor records steps finer than 0.01 K, because a
-   supply temperature held at its setpoint repeats on a coarser sensor.
-4. The load is calculated from flow and temperature difference. A large temperature inversion removes the hour.
-5. The data is averaged to hours. The measured load is used. Where it differs from the calculated load
-   by more than 20% and 2 kW, the calculated load is used.
-6. Each hour is marked as running or off from the supply temperature, the flow and the load.
-7. The year with the fewest missing hours is selected. `select_year=False` keeps the whole record.
+1. Small negative flow readings and negative flow readings while the plant is idle are set to zero. All other negative flow readings are treated as missing (N/A).
+2. Temperature, flow, and measured load readings outside their plausible ranges are treated as missing (N/A).
+3. Sequences of nine or more identical readings are treated as missing (N/A). This check is always applied to flow and load. For temperature, it is applied only when the sensor records increments smaller than 0.01 K. Coarser temperature readings may repeat during normal operation when the supply temperature is maintained at its setpoint.
+4. Loads are calculated from flow rates and supply–return temperature differences.
+5. Data are averaged to hourly values. Measured loads are used by default. If the difference between the measured and calculated loads exceeds both 20% and 2 kW, the calculated load is used instead.
+6. Each hour is classified as operating or off based on supply temperature, flow rate, and load.
+7. The year with the fewest missing hours is selected. Set `select_year=False` to retain the full record.
 
-The thresholds are at the top of `bldgload_analysis/clean.py`.
+The thresholds used in these steps are defined at the top of `bldgload_analysis/clean.py`.
 
 ## Metrics
 
-| group | metrics |
+| Group | Metrics |
 |---|---|
-| Load Magnitude & Distribution | annual and peak load, load per floor area, load statistics, operating hours, data coverage, capacity sizing, daily peak to mean ratio. One set for each loop |
-| Heating-Cooling Relationship | ratio of annual energy, ratio of peaks, share of hours with both loads |
-| Condenser Heat Recovery Potential | heating fraction covered, heat still rejected, peak heating reduction, heat recovery chiller size |
-| Outdoor Temperature & Grid Context | design percentiles of the outdoor temperature, mean emission factors, alignment of the load with the grid |
+| Load Magnitude & Distribution | Annual and peak loads, load statistics, operating hours, data coverage, capacity sizing, and daily peak-to-mean load ratios. Calculated separately for each loop |
+| Heating-Cooling Relationship | Annual heating to cooling energy ratio, peak heating to cooling load ratio, and fraction of hours with simultaneous heating and cooling loads |
+| Condenser Heat Recovery Potential | Fraction of heating demand covered by recovered heat, unrecovered condenser heat, peak heating load reduction, and heat recovery chiller capacity |
+| Outdoor Temperature & Grid Context | Design outdoor temperatures, average grid emission factors, and alignment of load patterns with grid carbon intensity |
 
-The definition of every metric is at the top of `bldgload_analysis/metrics.py`. `help(bldgload_analysis.metrics)` shows it.
+Definitions of all metrics are provided at the top of `bldgload_analysis/metrics.py` and can also be viewed using `help(bldgload_analysis.metrics)`.
 
 ## Units
 
-Everything inside is SI. `floor_area` takes `area_unit="m2"` or `"ft2"`. With `units="IP"` the
-metrics table, `hourly.csv`, the report and the figures come back in IP. The metrics table then uses
-Btu, Btu/h and Btu/h ft2, and the report shows energy in kBtu/ft2. `building.metrics(units="SI")` or
-`building.metric(name, units="SI")` asks for the other system at any time. The metrics table always
-carries a `unit` column.
+All internal calculations use SI units. Specify the floor area unit with `area_unit="m2"` or `"ft2"`.
+
+When `units="IP"` is selected, the metrics table, `hourly.csv`, report, and figures use IP units. The metrics table uses Btu, Btu/h, and Btu/(h·ft²) for energy, load, and load per floor area, respectively. The report displays energy per floor area in kBtu/ft².
+
+To retrieve metrics in SI units, use `building.metrics(units="SI")` or `building.metric(name, units="SI")`. The metrics table always includes a `unit` column.
 
 ## Heat recovery COP
 
-The four heat recovery metrics take the condenser heat as the cooling load times (1 + 1/COP). The COP is 3,
-as in the dataset. `cop=4` in `from_csv` or `from_example` sets another value, and `building.cop = 4` changes
-it later. `cop=0` leaves the compressor work out, so the condenser heat equals the cooling load.
+The four heat recovery metrics calculate condenser heat as the cooling load multiplied by (1 + 1/COP), where COP is the cooling COP. The default value is 3, matching the example dataset.
 
-The dataset values are for a COP of 3. With another COP the "position in the dataset" panel recomputes the
-heat recovery values of the example buildings with the same COP from their hourly loads. With a
-`reference=` file of your own those rows are left out.
+Set cop=4 in from_csv or from_example to use a different COP, or change it later with building.cop = 4. As a special option, cop=0 excludes compressor power from the calculation, making condenser heat equal to the cooling load.
 
-## Filled in from the location
+The comparison panel uses all example buildings by default. To compare only with selected buildings, pass the result of building.example_buildings(...) or a list of example building IDs through reference=. When the COP is changed, the heat recovery comparisons use the same COP for your building and the selected example buildings.
 
-With a `city` (or `latitude`, `longitude` and `timezone`) the package fills what the file lacks.
+## Location-based data
 
-When the file has no outdoor temperature, hourly temperature and relative humidity for the dates of the
-record come from the Open-Meteo archive and are converted to local standard time.
+Provide `city`, or `latitude`, `longitude`, and `timezone`, to retrieve weather data and grid emission factors when they are not supplied.
+
+If the input file does not include outdoor air temperature, the package retrieves hourly outdoor air temperature and relative humidity for the record’s date range from the Open-Meteo archive. Timestamps are converted to local standard time.
+
+You can provide your own `emission factors` with emission_factors="factors.csv". The CSV must contain month, hour, AER, and LRMER columns, with emission factors expressed in kg CO₂e/kWh. Grid metric names include the year, for example, AER_2025_annual_avg.
+
+If `emission_factors` are not provided, the package identifies the Cambium grid region (GEA) using a city lookup, with a state-level lookup as a fallback. Both lookups are based on NLR’s ZIP code-to-GEA mapping.
+
+Monthly hourly profiles of average emission rates (AER) and long-run marginal emission rates (LRMER) are downloaded from the NLR Scenario Viewer (https://scenarioviewer.nlr.gov) and cached in `~/.bldgload_analysis`. The initial download is approximately 27 MB.
+
+The state-level lookup is approximate for states that span multiple grid regions. Check the selected region using `building.meta["grid_region"]`, or specify it directly with `grid_region="PJM_West"`. Use `cambium_year=2030` to select a different model year. Cambium data cover the contiguous United States.
+
+The package can also run without an internet connection. If weather data or emission factors are unavailable, the corresponding metrics and report panels are left empty.
+
 
 When no `emission_factors` are given, the Cambium grid region (GEA) is found from the city (`lookup.Gea_cities`,
 then the state table `lookup.State_to_gea`). The month-hour AER and LRMER of that region are then
@@ -137,45 +138,51 @@ You can also give your own factors with `emission_factors=<csv>`. The file has t
 `hour`, `AER` and `LRMER` in kg CO2e per kWh. The grid metrics are named with the year, for example
 `AER_2025_annual_avg`.
 
-Everything still runs without internet. The related metrics and panels are then left empty.
-
-The lookups can also be called on their own.
+You can also retrieve location, weather, and grid emission data without creating a `Building` object.
 
 ```python
 from bldgload_analysis import get_location, get_weather, get_emission_factors
 
-get_location("Denver")                                    # latitude, longitude, timezone and state the name was matched to
-get_weather("Denver", "2023-01-01", "2023-12-31")         # hourly outdoor temperature and humidity
-get_emission_factors("WestConnect_North", year=2025)      # month-hour AER and LRMER of a Cambium region
+get_location("Denver")                               # Latitude, longitude, timezone, and state
+get_weather("Denver", "2023-01-01", "2023-12-31")      # Hourly outdoor air temperature and relative humidity
+get_emission_factors("WestConnect_North", year=2025)   # Monthly hourly AER and LRMER profiles
 ```
 
-## The example buildings
+## Example buildings
 
-The buildings of the dataset behind the Berkeley Decarb Tool ship inside the package
-(`bldgload_analysis/data`) as example buildings. The files hold the hourly loads with outdoor temperature,
-humidity and grid emission factors, the building metadata, and the 43 metrics of every building.
+The package includes measured and simulated load data from 373 commercial buildings in `bldgload_analysis/data`. This dataset is also used by the Berkeley Decarb Tool.
+
+The files contain hourly loads, outdoor air conditions, building metadata, and calculated metrics for each building.
 
 ```python
-from bldgload_analysis import Building, example_buildings
+from bldgload_analysis import Building, example_buildings, use_examples
 
-example_buildings()                                         # every example building, one row each
-example_buildings(building_type="Hospital", climate="3C")   # only the ones that fit
-example_buildings(source="measured")                        # only measured ones, or "simulated"
-building = Building.from_example(177)                       # then metrics(), report(), plot() as for any building
+example_buildings()                                        # List all example buildings
+example_buildings(building_type="Hospital", climate="3C")   # Filter by building type and climate zone
+example_buildings(source="measured")                       # List measured buildings only
+building = Building.from_example(177)                      # Load an example building
 ```
 
-A building of your own can ask for the example buildings that are like it.
+Use `metrics()`, `report()`, and `plot()` on the loaded building in the same way as for your own building.
+
+Find example buildings with characteristics matching your building:
 
 ```python
-building.example_buildings()                                  # same building type and same climate zone
-building.example_buildings(same=["climate"])                  # same climate zone only
-building.example_buildings(source="measured")                 # same type and climate, measured ones only
+building.example_buildings()                   # Same building type and climate zone
+building.example_buildings(same=["climate"])    # Same climate zone only
+building.example_buildings(source="measured")  # Same type and climate zone, measured data only
 ```
 
-Example buildings carry loads and outdoor air only, so the water temperature and flow panels stay
-empty and operating hours are the hours with a positive load. The "position in the dataset" panel compares
-with the example buildings unless `reference=` names another `load_summary.csv`. `use_examples(folder)`
-points at another copy of the files, and `use_examples(None)` goes back to the copy in the package.
+Pass the selected buildings through `reference=` to use them in the report’s comparison panel. If no selection is provided, the panel compares your building with all example buildings.
+
+```python
+reference = building.example_buildings()
+building.report("report.pdf", reference=reference)
+```
+
+Example buildings do not include water temperature or flow data, so the corresponding report panels are left empty. Operating hours are defined as hours with a positive load.
+
+Use `use_examples(folder)` to load the example dataset from another folder, or `use_examples(None)` to return to the dataset included in the package.
 
 ## Figures
 
@@ -185,37 +192,39 @@ points at another copy of the files, and `use_examples(None)` goes back to the c
 `load_shifting`, `heat_recovery`, `heat_recovery_capacity`, `part_load`, `capacity_configuration`,
 `dataset_position`
 
-Each name is drawn with `ax = building.plot(name)`. A figure made this way is 4.2 x 3.2 inches and keeps its
-title, labels and legend inside. Pass `ax=` to draw on an Axes of your own. The look of the figures is applied
-only while they are drawn, so your own matplotlib settings stay as they are. Close figures you no longer need
-with `plt.close(ax.figure)`.
+Create a figure with `ax = building.plot(name)`, where `name` is one of the figure names listed above. Each figure is 4.2 × 3.2 inches, with the title, axis labels, and legend contained within the figure.
+
+Pass `ax=` to plot on an existing matplotlib Axes. The package applies its plotting style only while drawing, preserving your existing matplotlib settings.
+
+Close figures you no longer need with `plt.close(ax.figure)`.
 
 ## Data sources
 
-- Outdoor weather comes from the Open-Meteo archive (https://open-meteo.com).
-- Grid emission factors come from Cambium, provided by the National Laboratory of the Rockies (NLR,
-  formerly NREL). Nothing from Cambium ships with this package. Its use is subject to the NLR disclaimer
-  shown on the Scenario Viewer. Please cite the Cambium documentation for the release you use.
-- The example buildings are the dataset behind the Berkeley Decarb Tool.
+- Weather data are retrieved from the [Open-Meteo archive](https://open-meteo.com).
+- Grid emission factors retrieved automatically by the package come from Cambium through the [NLR Scenario Viewer](https://scenarioviewer.nlr.gov). Refer to the disclaimer on the Scenario Viewer and cite the Cambium documentation for the release you use.
+- The example building dataset contains measured and simulated load data and is also used by the Berkeley Decarb Tool.
 
 ## License
 
 Distributed under the MIT License. See the `LICENSE` file.
 
-## Layout
+## Project structure
 
-```
+```text
 bldgload_analysis/
-  building.py     Building class, input reading, save and load
-  clean.py        cleaning protocol for one loop, best year selection
-  metrics.py      the 43 core metrics and their definitions
-  units.py        SI and IP conversion
-  figures.py      one function per figure
-  report.py       one page report
-  lookup.py       location, weather, Cambium grid region
-  cambium.py      download of the Cambium emission factors
-  examples.py     the example buildings
-  data/           the files of the example buildings
+    building.py     Building class, input handling, saving, and loading
+    clean.py        Data cleaning and most complete year selection
+    metrics.py      Calculation and definitions of the 43 core metrics
+    units.py        SI and IP unit conversion
+    figures.py      Individual plotting functions
+    report.py       One-page summary report generation
+    lookup.py       Location, weather, and grid region lookups
+    cambium.py      Cambium emission factor downloads
+    examples.py     Example building access and filtering
+    data/           Example building datasets
+
 example/
-  run.py          a filled in template, with its building.csv
+    run.py          Complete usage example
+    building.csv    Example input data
+    emission_factors.csv    Example emission factor input
 ```

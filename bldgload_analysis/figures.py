@@ -4,7 +4,6 @@ import pandas as pd
 import functools
 import re
 import matplotlib.pyplot as plt
-from pathlib import Path
 from matplotlib import font_manager
 from matplotlib.colors import LinearSegmentedColormap
 
@@ -669,61 +668,51 @@ Context = [("hhw", "max_load_per_area", "peak heating load", "density"), ("chw",
 
 
 def _building_ids(reference):
-    """The building ids when reference is a choice of example buildings, None when it is a table of metrics or a file.
-
-    A choice is the table that example_buildings() returns, or a list of building ids.
-    """
+    """The building ids of a choice of example buildings: the table that example_buildings() returns, or a list of ids."""
     if isinstance(reference, pd.DataFrame):
-        if "building" in reference.columns and "variable" not in reference.columns:
-            return [str(i) for i in reference["building"]]
-        return None
-    if isinstance(reference, (str, Path)) or reference is None:
-        return None
+        if "building" not in reference.columns or "variable" in reference.columns:
+            raise TypeError("reference takes the table from example_buildings() or a list of building ids")
+        return [str(i) for i in reference["building"]]
+    if isinstance(reference, (str, bytes)) or hasattr(reference, "__fspath__"):
+        raise TypeError("reference takes the table from example_buildings() or a list of building ids, not a file")
     return [str(i) for i in reference]
 
 
 @_styled
 def dataset_position(b, ax=None, reference=None):
-    """Where this building stands among other buildings, as a percentile for each of eight metrics.
+    """Where this building stands among the example buildings, as a percentile for each of eight metrics.
 
-    reference   None                       every example building
-                building.example_buildings(...) or a list of building ids
-                                           only those example buildings
-                a load_summary.csv or its table, long format with loop, variable, value
-                                           the buildings of your own dataset
+    reference   None compares with every example building.
+                building.example_buildings(...) or a list of building ids compares with those only.
 
     The values of the example buildings are for a COP of 3. With another COP their heat recovery rows are
-    recomputed with that COP from the hourly loads, for the chosen buildings too. A load_summary.csv of your
-    own has no hourly loads, so with another COP its heat recovery rows are left out.
+    recomputed with that COP from the hourly loads, for a choice of buildings too.
     """
     ax = _ax(ax)
     from . import examples
     title = "Position in the dataset"
+    ids = None if reference is None else _building_ids(reference)
+    try:
+        ref = examples.reference()
+    except Exception:
+        return _msg(ax, title, "no example buildings\n(see use_examples)")
     heat_recovery = None                     # the heat recovery values to compare with, when the COP is not 3
-    ids = _building_ids(reference)
-    if reference is None or ids is not None:
+    if b.cop != COP:
         try:
-            ref = examples.reference()
+            heat_recovery = examples.heat_recovery_reference(b.cop)
         except Exception:
-            return _msg(ax, title, "no reference dataset\n(use_examples or reference=)")
-        if b.cop != COP:
-            try:
-                heat_recovery = examples.heat_recovery_reference(b.cop)
-            except Exception:
-                heat_recovery = None
-        if ids is not None:
-            title = "Position in the selection"
-            known = set(ref["building"].astype(str))
-            unknown = [i for i in dict.fromkeys(ids) if i not in known]
-            if unknown:
-                raise KeyError(f"not one of the example buildings: {', '.join(unknown[:10])}")
-            if not ids:
-                return _msg(ax, title, "no example building selected")
-            ref = ref[ref["building"].astype(str).isin(ids)]
-            if heat_recovery is not None:
-                heat_recovery = heat_recovery[heat_recovery["building"].isin(ids)]
-    else:
-        ref = reference if isinstance(reference, pd.DataFrame) else pd.read_csv(reference)
+            heat_recovery = None
+    if ids is not None:
+        title = "Position in the selection"
+        known = set(ref["building"].astype(str))
+        unknown = [i for i in dict.fromkeys(ids) if i not in known]
+        if unknown:
+            raise KeyError(f"not one of the example buildings: {', '.join(unknown[:10])}")
+        if not ids:
+            return _msg(ax, title, "no example building selected")
+        ref = ref[ref["building"].astype(str).isin(ids)]
+        if heat_recovery is not None:
+            heat_recovery = heat_recovery[heat_recovery["building"].isin(ids)]
     rows = []
     u = b.units
     for lp, var, lab, unit in Context:
