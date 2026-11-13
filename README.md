@@ -45,7 +45,7 @@ ax = building.plot("heat_recovery_capacity")       # matplotlib Axes
 building = Building.load("Building_user_Hospital") # Load from the saved folder
 ```
 
-see `example/run.py` for a complete usage example.
+See `example/run.py` for a complete usage example.
 The metrics table contains 43 rows, including six grid-related metrics. When emission factors are unavailable, the table contains 37 rows.
 
 ## Input file
