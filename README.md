@@ -15,8 +15,6 @@ The package also includes a mix of measured and simulated load data from 373 com
 pip install git+https://github.com/jiwonpark-HVAC/bldgload_analysis.git
 ```
 
-From a local copy of this folder, use `pip install -e .` instead.
-
 It needs Python 3.10 or later. pandas, numpy, matplotlib and pyarrow are installed with it.
 
 ## Use
