@@ -1,9 +1,13 @@
 # bldgload_analysis
+A Python package for analyzing building heating and cooling loads. Starting with your building’s load data, the package:
 
-Heating and cooling load metrics for one building with hydronic HVAC. The package cleans the raw data
-with the same protocol as the Berkeley Decarb Tool dataset, picks the best 8760 hour year, computes the
-43 core metrics, and draws a one page report or any of its figures on its own. The buildings of that
-dataset ship with the package as example buildings, so a building can be compared with them.
+- Cleans the raw data using the same protocol as the Berkeley Decarb Tool dataset.
+- Selects the most complete year (8,760 hours) when the data spans more than one year.
+- Retrieves outdoor weather data and grid emission factors when a building location is provided, enabling analysis of load patterns in relation to weather and associated carbon emissions.
+- Calculates 43 core metrics.
+- Generates a one-page summary report, with options to create each figure separately.
+
+The package also includes a mix of measured and simulated load data from 373 commercial buildings, allowing you to compare your building with similar buildings.
 
 ## Install
 
