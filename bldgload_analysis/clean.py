@@ -11,7 +11,7 @@ Flow_max_lps = 1000            # L/s, a flow at or above this is removed
 Inversion_k = 5                # K, a return warmer than the supply (heating) by more than this is removed
 Stuck_run = 9                  # readings, a run of this many identical non zero readings is a stuck sensor
 Temp_resolution_k = 0.01       # K, only a temperature sensor that records finer steps than this is checked for stuck readings
-T_max = {"heating": 130, "cooling": 45}      # C, water temperatures outside 0 to this are flagged
+T_max = {"heating": 130, "cooling": 45}      # C, a water temperature outside 0 to this is removed
 Oper = {"t_sup_min_heating": 32, "t_sup_max_cooling": 18.5, "flow_min": 0.06, "load_min": 100}   # C, C, L/s, W: the plant is running
 Max_zero_run_h = 24 * 90       # h, a year with a longer stretch of no load in both loops is avoided
 
@@ -53,11 +53,13 @@ def flow_negatives(df):
 
 
 def range_fence(df, mode):
-    """Flag temperatures, flow and measured load outside their plausible range. Out of range load is removed."""
+    """Flag and remove temperatures, flow and measured load outside their plausible range."""
     tmax = T_max[mode]
     for c in ("sup", "ret"):
         df[f"flag_{c}_out_of_range"] = df[c].notna() & ((df[c] < 0) | (df[c] > tmax))
+        df[c] = df[c].where(~df[f"flag_{c}_out_of_range"])
     df["flag_flow_out_of_range"] = df["flow"].notna() & (df["flow"] >= Flow_max_lps)
+    df["flow"] = df["flow"].where(~df["flag_flow_out_of_range"])
     lm = df["load_meas"]
     bad = lm.notna() & ((lm > Load_max_w) | (lm < -0.01 * Load_max_w))
     df["flag_load_meas_out_of_range"] = bad

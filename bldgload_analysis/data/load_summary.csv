@@ -7610,25 +7610,25 @@ building,source,model_source,group,loop,variable,value
 177,measured,measured,Outdoor Temperature & Grid Context,temperature,p01_temp,2.8
 177,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_6_temp,36.1
 177,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_temp,35
-178,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,91.6551
-178,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,5.1445
+178,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,91.651
+178,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,5.1517
 178,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_peak_reduction,0
 178,measured,measured,Condenser Heat Recovery Potential,both,hrc_capacity_marginal_gain_5pct,15
-178,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,2.1628
+178,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,2.1608
 178,measured,measured,Heating-Cooling Relationship,both,ratio_of_peak_heating_and_cooling,1.2758
 178,measured,measured,Heating-Cooling Relationship,both,simultaneous_heating_and_cooling_hour_ratio,11.2712
-178,measured,measured,Load Magnitude & Distribution,chw,annual_load,50500571.4693
+178,measured,measured,Load Magnitude & Distribution,chw,annual_load,50545685.0661
 178,measured,measured,Load Magnitude & Distribution,chw,cooling_capacity_marginal_gain_5pct,35
-178,measured,measured,Load Magnitude & Distribution,chw,cooling_hour_ratio,37.9747
+178,measured,measured,Load Magnitude & Distribution,chw,cooling_hour_ratio,37.9626
 178,measured,measured,Load Magnitude & Distribution,chw,data_coverage,94.6918
 178,measured,measured,Load Magnitude & Distribution,chw,max_load,254813.6264
 178,measured,measured,Load Magnitude & Distribution,chw,max_load_per_area,47.2895
-178,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,15180.9176
-178,measured,measured,Load Magnitude & Distribution,chw,median_load_gt0,4914.4996
+178,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,15199.3043
+178,measured,measured,Load Magnitude & Distribution,chw,median_load_gt0,4915.7357
 178,measured,measured,Load Magnitude & Distribution,chw,min_load_gt0,102.4654
 178,measured,measured,Load Magnitude & Distribution,chw,q25_load,0
-178,measured,measured,Load Magnitude & Distribution,chw,q75_load,2743.7
-178,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,2.5245
+178,measured,measured,Load Magnitude & Distribution,chw,q75_load,2748.6664
+178,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,2.5194
 178,measured,measured,Load Magnitude & Distribution,chw,valid_hours,8295
 178,measured,measured,Load Magnitude & Distribution,hhw,annual_load,116481766.5289
 178,measured,measured,Load Magnitude & Distribution,hhw,data_coverage,88.7215
@@ -7645,8 +7645,8 @@ building,source,model_source,group,loop,variable,value
 178,measured,measured,Load Magnitude & Distribution,hhw,winter_heating_average_profile_pmr,NA
 178,measured,measured,Outdoor Temperature & Grid Context,grid,AER_2025_annual_avg,0.2015
 178,measured,measured,Outdoor Temperature & Grid Context,grid,LRMER_2025_annual_avg,0.3206
-178,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_AER_2025,0.7357
-178,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_LRMER_2025,0.6136
+178,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_AER_2025,0.7354
+178,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_LRMER_2025,0.6131
 178,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_AER_2025,NA
 178,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_LRMER_2025,NA
 178,measured,measured,Outdoor Temperature & Grid Context,temperature,p00_4_temp,0.6
@@ -7654,10 +7654,10 @@ building,source,model_source,group,loop,variable,value
 178,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_6_temp,36.1
 178,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_temp,34.4
 179,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,81.8198
-179,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,9.8103
+179,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,9.8088
 179,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_peak_reduction,0
 179,measured,measured,Condenser Heat Recovery Potential,both,hrc_capacity_marginal_gain_5pct,15
-179,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,2.4709
+179,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,2.4713
 179,measured,measured,Heating-Cooling Relationship,both,ratio_of_peak_heating_and_cooling,1.7531
 179,measured,measured,Heating-Cooling Relationship,both,simultaneous_heating_and_cooling_hour_ratio,56.4232
 179,measured,measured,Load Magnitude & Distribution,chw,annual_load,637915463.0812
@@ -7673,40 +7673,40 @@ building,source,model_source,group,loop,variable,value
 179,measured,measured,Load Magnitude & Distribution,chw,q75_load,99820.3557
 179,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,2.3691
 179,measured,measured,Load Magnitude & Distribution,chw,valid_hours,8739
-179,measured,measured,Load Magnitude & Distribution,hhw,annual_load,1574706994.694
+179,measured,measured,Load Magnitude & Distribution,hhw,annual_load,1574947825.8204
 179,measured,measured,Load Magnitude & Distribution,hhw,data_coverage,99.9201
 179,measured,measured,Load Magnitude & Distribution,hhw,heating_capacity_marginal_gain_5pct,40
-179,measured,measured,Load Magnitude & Distribution,hhw,heating_hour_ratio,89.0895
+179,measured,measured,Load Magnitude & Distribution,hhw,heating_hour_ratio,89.1009
 179,measured,measured,Load Magnitude & Distribution,hhw,max_load,1094599.29
 179,measured,measured,Load Magnitude & Distribution,hhw,max_load_per_area,100.5305
-179,measured,measured,Load Magnitude & Distribution,hhw,mean_load_gt0,201775.9255
-179,measured,measured,Load Magnitude & Distribution,hhw,median_load_gt0,154903.1792
+179,measured,measured,Load Magnitude & Distribution,hhw,mean_load_gt0,201780.9086
+179,measured,measured,Load Magnitude & Distribution,hhw,median_load_gt0,154917.3799
 179,measured,measured,Load Magnitude & Distribution,hhw,min_load_gt0,138.5218
-179,measured,measured,Load Magnitude & Distribution,hhw,q25_load,27065.7179
+179,measured,measured,Load Magnitude & Distribution,hhw,q25_load,27074.9979
 179,measured,measured,Load Magnitude & Distribution,hhw,q75_load,295155.5059
 179,measured,measured,Load Magnitude & Distribution,hhw,valid_hours,8753
-179,measured,measured,Load Magnitude & Distribution,hhw,winter_heating_average_profile_pmr,1.5508
+179,measured,measured,Load Magnitude & Distribution,hhw,winter_heating_average_profile_pmr,1.5503
 179,measured,measured,Outdoor Temperature & Grid Context,grid,AER_2025_annual_avg,0.2015
 179,measured,measured,Outdoor Temperature & Grid Context,grid,LRMER_2025_annual_avg,0.3206
 179,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_AER_2025,0.7967
 179,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_LRMER_2025,0.7087
-179,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_AER_2025,0.9744
-179,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_LRMER_2025,0.9519
+179,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_AER_2025,0.9745
+179,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_LRMER_2025,0.952
 179,measured,measured,Outdoor Temperature & Grid Context,temperature,p00_4_temp,0.6
 179,measured,measured,Outdoor Temperature & Grid Context,temperature,p01_temp,1.7
 179,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_6_temp,36.1
 179,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_temp,34.4
 180,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,98.4538
-180,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,1.613
+180,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,1.6131
 180,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_peak_reduction,0
 180,measured,measured,Condenser Heat Recovery Potential,both,hrc_capacity_marginal_gain_5pct,10
-180,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,1.2781
+180,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,1.278
 180,measured,measured,Heating-Cooling Relationship,both,ratio_of_peak_heating_and_cooling,1.5999
-180,measured,measured,Heating-Cooling Relationship,both,simultaneous_heating_and_cooling_hour_ratio,6.2707
-180,measured,measured,Load Magnitude & Distribution,chw,annual_load,16521214.6034
+180,measured,measured,Heating-Cooling Relationship,both,simultaneous_heating_and_cooling_hour_ratio,6.2714
+180,measured,measured,Load Magnitude & Distribution,chw,annual_load,16523101.8795
 180,measured,measured,Load Magnitude & Distribution,chw,cooling_capacity_marginal_gain_5pct,50
-180,measured,measured,Load Magnitude & Distribution,chw,cooling_hour_ratio,16.5391
-180,measured,measured,Load Magnitude & Distribution,chw,data_coverage,99.9429
+180,measured,measured,Load Magnitude & Distribution,chw,cooling_hour_ratio,16.541
+180,measured,measured,Load Magnitude & Distribution,chw,data_coverage,99.9315
 180,measured,measured,Load Magnitude & Distribution,chw,max_load,35843.3195
 180,measured,measured,Load Magnitude & Distribution,chw,max_load_per_area,56.7374
 180,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,11403.1662
@@ -7715,7 +7715,7 @@ building,source,model_source,group,loop,variable,value
 180,measured,measured,Load Magnitude & Distribution,chw,q25_load,0
 180,measured,measured,Load Magnitude & Distribution,chw,q75_load,0
 180,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,2.8658
-180,measured,measured,Load Magnitude & Distribution,chw,valid_hours,8755
+180,measured,measured,Load Magnitude & Distribution,chw,valid_hours,8754
 180,measured,measured,Load Magnitude & Distribution,hhw,annual_load,21112060.2755
 180,measured,measured,Load Magnitude & Distribution,hhw,data_coverage,99.9658
 180,measured,measured,Load Magnitude & Distribution,hhw,heating_capacity_marginal_gain_5pct,40
@@ -8298,25 +8298,25 @@ building,source,model_source,group,loop,variable,value
 193,measured,measured,Outdoor Temperature & Grid Context,temperature,p01_temp,6.7
 193,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_6_temp,28.3
 193,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_temp,26.1
-194,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,31.1487
+194,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,31.1637
 194,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,24.395
 194,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_peak_reduction,5.6868
 194,measured,measured,Condenser Heat Recovery Potential,both,hrc_capacity_marginal_gain_5pct,30
-194,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,3.7631
+194,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,3.7623
 194,measured,measured,Heating-Cooling Relationship,both,ratio_of_peak_heating_and_cooling,1.0441
 194,measured,measured,Heating-Cooling Relationship,both,simultaneous_heating_and_cooling_hour_ratio,57.1396
-194,measured,measured,Load Magnitude & Distribution,chw,annual_load,1065348221.4602
+194,measured,measured,Load Magnitude & Distribution,chw,annual_load,1065579820.1732
 194,measured,measured,Load Magnitude & Distribution,chw,cooling_capacity_marginal_gain_5pct,45
 194,measured,measured,Load Magnitude & Distribution,chw,cooling_hour_ratio,57.4263
 194,measured,measured,Load Magnitude & Distribution,chw,data_coverage,99.26
 194,measured,measured,Load Magnitude & Distribution,chw,max_load,1297817.6785
 194,measured,measured,Load Magnitude & Distribution,chw,max_load_per_area,145.6745
-194,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,211197.2915
+194,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,211243.2042
 194,measured,measured,Load Magnitude & Distribution,chw,median_load_gt0,95090.778
 194,measured,measured,Load Magnitude & Distribution,chw,min_load_gt0,1499.564
 194,measured,measured,Load Magnitude & Distribution,chw,q25_load,0
 194,measured,measured,Load Magnitude & Distribution,chw,q75_load,179375.0383
-194,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,2.3577
+194,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,2.3565
 194,measured,measured,Load Magnitude & Distribution,chw,valid_hours,8719
 194,measured,measured,Load Magnitude & Distribution,hhw,annual_load,4021576227.8095
 194,measured,measured,Load Magnitude & Distribution,hhw,data_coverage,99.0779
@@ -8333,8 +8333,8 @@ building,source,model_source,group,loop,variable,value
 194,measured,measured,Load Magnitude & Distribution,hhw,winter_heating_average_profile_pmr,1.2415
 194,measured,measured,Outdoor Temperature & Grid Context,grid,AER_2025_annual_avg,0.2016
 194,measured,measured,Outdoor Temperature & Grid Context,grid,LRMER_2025_annual_avg,0.3205
-194,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_AER_2025,0.6799
-194,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_LRMER_2025,0.5217
+194,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_AER_2025,0.6798
+194,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_LRMER_2025,0.5216
 194,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_AER_2025,0.9909
 194,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_LRMER_2025,0.9824
 194,measured,measured,Outdoor Temperature & Grid Context,temperature,p00_4_temp,6.7
@@ -8599,23 +8599,23 @@ building,source,model_source,group,loop,variable,value
 200,measured,measured,Outdoor Temperature & Grid Context,temperature,p01_temp,7.2
 200,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_6_temp,35
 200,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_temp,32.8
-201,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,70.8173
-201,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,68.7742
+201,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,70.8178
+201,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,68.7724
 201,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_peak_reduction,0.2687
 201,measured,measured,Condenser Heat Recovery Potential,both,hrc_capacity_marginal_gain_5pct,15
 201,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,0.5658
 201,measured,measured,Heating-Cooling Relationship,both,ratio_of_peak_heating_and_cooling,0.3295
 201,measured,measured,Heating-Cooling Relationship,both,simultaneous_heating_and_cooling_hour_ratio,97.0064
-201,measured,measured,Load Magnitude & Distribution,chw,annual_load,4173166106.5578
+201,measured,measured,Load Magnitude & Distribution,chw,annual_load,4173134943.6305
 201,measured,measured,Load Magnitude & Distribution,chw,cooling_capacity_marginal_gain_5pct,50
 201,measured,measured,Load Magnitude & Distribution,chw,cooling_hour_ratio,97.0068
 201,measured,measured,Load Magnitude & Distribution,chw,data_coverage,95.8333
 201,measured,measured,Load Magnitude & Distribution,chw,max_load,2038651.2081
 201,measured,measured,Load Magnitude & Distribution,chw,max_load_per_area,164.9915
-201,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,489748.2471
+201,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,489744.5899
 201,measured,measured,Load Magnitude & Distribution,chw,median_load_gt0,371559.8986
 201,measured,measured,Load Magnitude & Distribution,chw,min_load_gt0,128.9513
-201,measured,measured,Load Magnitude & Distribution,chw,q25_load,108226.4773
+201,measured,measured,Load Magnitude & Distribution,chw,q25_load,107962.803
 201,measured,measured,Load Magnitude & Distribution,chw,q75_load,748499.2999
 201,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,1.4276
 201,measured,measured,Load Magnitude & Distribution,chw,valid_hours,8418
@@ -8685,25 +8685,25 @@ building,source,model_source,group,loop,variable,value
 202,measured,measured,Outdoor Temperature & Grid Context,temperature,p01_temp,1.7
 202,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_6_temp,39.4
 202,measured,measured,Outdoor Temperature & Grid Context,temperature,p99_temp,37.2
-203,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,61.4782
-203,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,66.1091
+203,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heat_rejection,61.4779
+203,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_fraction,66.11
 203,measured,measured,Condenser Heat Recovery Potential,both,heat_recovery_heating_peak_reduction,11.0633
 203,measured,measured,Condenser Heat Recovery Potential,both,hrc_capacity_marginal_gain_5pct,25
 203,measured,measured,Heating-Cooling Relationship,both,annual_heating_and_cooling_ratio,0.7769
 203,measured,measured,Heating-Cooling Relationship,both,ratio_of_peak_heating_and_cooling,0.4848
 203,measured,measured,Heating-Cooling Relationship,both,simultaneous_heating_and_cooling_hour_ratio,99.4909
-203,measured,measured,Load Magnitude & Distribution,chw,annual_load,1664286833.4603
+203,measured,measured,Load Magnitude & Distribution,chw,annual_load,1664330354.8713
 203,measured,measured,Load Magnitude & Distribution,chw,cooling_capacity_marginal_gain_5pct,50
 203,measured,measured,Load Magnitude & Distribution,chw,cooling_hour_ratio,99.8848
 203,measured,measured,Load Magnitude & Distribution,chw,data_coverage,98.816
 203,measured,measured,Load Magnitude & Distribution,chw,max_load,641915.03
 203,measured,measured,Load Magnitude & Distribution,chw,max_load_per_area,85.4684
-203,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,189686.5239
-203,measured,measured,Load Magnitude & Distribution,chw,median_load_gt0,156561.4963
+203,measured,measured,Load Magnitude & Distribution,chw,mean_load_gt0,189691.4843
+203,measured,measured,Load Magnitude & Distribution,chw,median_load_gt0,156586.041
 203,measured,measured,Load Magnitude & Distribution,chw,min_load_gt0,3253.0889
 203,measured,measured,Load Magnitude & Distribution,chw,q25_load,80978.2842
 203,measured,measured,Load Magnitude & Distribution,chw,q75_load,284582.2665
-203,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,1.333
+203,measured,measured,Load Magnitude & Distribution,chw,summer_cooling_average_profile_pmr,1.3329
 203,measured,measured,Load Magnitude & Distribution,chw,valid_hours,8680
 203,measured,measured,Load Magnitude & Distribution,hhw,annual_load,1280662303.2932
 203,measured,measured,Load Magnitude & Distribution,hhw,data_coverage,83.6976
@@ -8720,8 +8720,8 @@ building,source,model_source,group,loop,variable,value
 203,measured,measured,Load Magnitude & Distribution,hhw,winter_heating_average_profile_pmr,1.0875
 203,measured,measured,Outdoor Temperature & Grid Context,grid,AER_2025_annual_avg,0.2016
 203,measured,measured,Outdoor Temperature & Grid Context,grid,LRMER_2025_annual_avg,0.3205
-203,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_AER_2025,0.9405
-203,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_LRMER_2025,0.916
+203,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_AER_2025,0.9404
+203,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_summer_LRMER_2025,0.9159
 203,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_AER_2025,1.0081
 203,measured,measured,Outdoor Temperature & Grid Context,grid,alignment_factor_winter_LRMER_2025,1.0107
 203,measured,measured,Outdoor Temperature & Grid Context,temperature,p00_4_temp,5
