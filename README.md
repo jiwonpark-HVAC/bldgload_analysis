@@ -105,9 +105,9 @@ To retrieve metrics in SI units, use `building.metrics(units="SI")` or `building
 
 The four heat recovery metrics calculate condenser heat as the cooling load multiplied by (1 + 1/COP), where COP is the cooling COP. The default value is 3, matching the example dataset.
 
-Set cop=4 in from_csv or from_example to use a different COP, or change it later with building.cop = 4. As a special option, cop=0 excludes compressor power from the calculation, making condenser heat equal to the cooling load.
+Set `cop=4` in `from_csv` or `from_example` to use a different COP, or change it later with `building.cop = 4`. As a special option, `cop=0` excludes compressor power from the calculation, making condenser heat equal to the cooling load.
 
-The comparison panel uses all example buildings by default. To compare only with selected buildings, pass the result of building.example_buildings(...) or a list of example building IDs through reference=. When the COP is changed, the heat recovery comparisons use the same COP for your building and the selected example buildings.
+The comparison panel uses all example buildings by default. To compare only with selected buildings, pass the result of `building.example_buildings(...)` or a list of example building IDs through `reference=`. When the COP is changed, the heat recovery comparisons use the same COP for your building and the selected example buildings.
 
 ## Location-based data
 
@@ -115,7 +115,7 @@ Provide `city`, or `latitude`, `longitude`, and `timezone`, to retrieve weather 
 
 If the input file does not include outdoor air temperature, the package retrieves hourly outdoor air temperature and relative humidity for the record’s date range from the Open-Meteo archive. Timestamps are converted to local standard time.
 
-You can provide your own `emission factors` with emission_factors="factors.csv". The CSV must contain month, hour, AER, and LRMER columns, with emission factors expressed in kg CO₂e/kWh. Grid metric names include the year, for example, AER_2025_annual_avg.
+You can provide your own emission factors with `emission_factors="factors.csv"`. The CSV must contain `month`, `hour`, `AER`, and `LRMER` columns, with emission factors expressed in kg CO₂e/kWh. Grid metric names include the year, for example, `AER_2025_annual_avg`.
 
 If `emission_factors` are not provided, the package identifies the Cambium grid region (GEA) using a city lookup, with a state-level lookup as a fallback. Both lookups are based on NLR’s ZIP code-to-GEA mapping.
 
@@ -124,19 +124,6 @@ Monthly hourly profiles of average emission rates (AER) and long-run marginal em
 The state-level lookup is approximate for states that span multiple grid regions. Check the selected region using `building.meta["grid_region"]`, or specify it directly with `grid_region="PJM_West"`. Use `cambium_year=2030` to select a different model year. Cambium data cover the contiguous United States.
 
 The package can also run without an internet connection. If weather data or emission factors are unavailable, the corresponding metrics and report panels are left empty.
-
-
-When no `emission_factors` are given, the Cambium grid region (GEA) is found from the city (`lookup.Gea_cities`,
-then the state table `lookup.State_to_gea`). The month-hour AER and LRMER of that region are then
-downloaded from the NLR Scenario Viewer (https://scenarioviewer.nlr.gov) and kept under
-`~/.bldgload_analysis`. The first download is about 27 MB. Both tables follow NLR's ZIP code to GEA
-table. The state table is approximate where a state is split between regions, so check the region in
-`building.meta["grid_region"]`. `grid_region="PJM_West"` sets it by hand, and `cambium_year=2030` picks another
-model year. Cambium covers the contiguous United States.
-
-You can also give your own factors with `emission_factors=<csv>`. The file has the columns `month`,
-`hour`, `AER` and `LRMER` in kg CO2e per kWh. The grid metrics are named with the year, for example
-`AER_2025_annual_avg`.
 
 You can also retrieve location, weather, and grid emission data without creating a `Building` object.
 
