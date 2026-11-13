@@ -193,8 +193,11 @@ def regular_steps(df):
     return grid.merge(df.drop_duplicates("datetime"), on="datetime", how="left")
 
 
-def clean_loop(raw: pd.DataFrame, mode: str) -> pd.DataFrame:
-    """raw: datetime, sup, ret, flow, load_meas at native resolution. Returns the cleaned hourly loop."""
+def clean_loop(raw: pd.DataFrame, mode: str, stuck: bool = True) -> pd.DataFrame:
+    """raw: datetime, sup, ret, flow, load_meas at native resolution. Returns the cleaned hourly loop.
+
+    stuck=False skips the stuck sensor check. Simulated data has no sensors, and a constant load or flow is real there.
+    """
     df = raw.sort_values("datetime").reset_index(drop=True).copy()
     for c in Loop_cols:
         if c not in df:
@@ -203,7 +206,11 @@ def clean_loop(raw: pd.DataFrame, mode: str) -> pd.DataFrame:
     df = regular_steps(df)
     df = flow_negatives(df)
     df = range_fence(df, mode)
-    df = stuck_sensors(df)
+    if stuck:
+        df = stuck_sensors(df)
+    else:
+        for f in ("flag_sup_consec", "flag_ret_consec", "flag_flow_consec", "flag_load_consec"):
+            df[f] = False
     df = load_calc(df, mode)
     h = to_hourly(df)
     h = resolve_load(h)
@@ -213,9 +220,13 @@ def clean_loop(raw: pd.DataFrame, mode: str) -> pd.DataFrame:
 
 
 def best_year(h: pd.DataFrame):
-    """Pick the best 8760 or 8784 hour window. Returns (start, end) or None when under one year."""
+    """Pick the best 8760 or 8784 hour window. Returns (start, end) or None when no window starting at midnight fits."""
     ts = h["timestamp"]
     if (ts.max() - ts.min()).days < 365:
+        first = ts.min()                     # a record of exactly one year that starts at midnight is its own window
+        n = year_hours(first)
+        if first == first.floor("D") and first + pd.Timedelta(hours=n - 1) <= ts.max():
+            return first, first + pd.Timedelta(hours=n - 1)
         return None
     full = pd.DataFrame({"timestamp": pd.date_range(ts.min().floor("D"), ts.max() + pd.Timedelta(days=2), freq="h")})
     full = full.merge(h[["timestamp", "heating_W", "cooling_W"]], on="timestamp", how="left")
@@ -224,9 +235,7 @@ def best_year(h: pd.DataFrame):
     starts = pd.date_range(ts.min().floor("D"), ts.max().floor("D") - pd.Timedelta(days=365), freq="D")
     best = None
     for s in starts:
-        leap = any(pd.Timestamp(y, 2, 29) >= s and pd.Timestamp(y, 2, 29) <= s + pd.Timedelta(hours=8783)
-                   for y in range(s.year, s.year + 2) if _leap(y))
-        n = 8784 if leap else 8760
+        n = year_hours(s)
         i0 = int((s - full["timestamp"].iloc[0]) / pd.Timedelta(hours=1))
         a, b, z = hw[i0:i0 + n], cw[i0:i0 + n], both0[i0:i0 + n]
         fail = _max_run(z) > Max_zero_run_h
@@ -236,6 +245,13 @@ def best_year(h: pd.DataFrame):
         if best is None or key < best[0]:
             best = (key, s, s + pd.Timedelta(hours=n - 1))
     return None if best is None else (best[1], best[2])
+
+
+def year_hours(start):
+    """8784 when the year that starts here holds a February 29, otherwise 8760."""
+    leap = any(pd.Timestamp(y, 2, 29) >= start and pd.Timestamp(y, 2, 29) <= start + pd.Timedelta(hours=8783)
+               for y in range(start.year, start.year + 2) if _leap(y))
+    return 8784 if leap else 8760
 
 
 def _leap(y):

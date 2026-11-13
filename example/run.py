@@ -13,7 +13,7 @@ building = Building.from_csv(
     city="San Francisco",
     climate="3C",
     construction_year=2015,
-    source="simulated",              # "measured" or "simulated"
+    source="measured",              # "measured" or "simulated"
     # With a city, missing outdoor temperature is taken from Open-Meteo and the emission factors
     # of the city's Cambium grid region from the NLR Scenario Viewer.
     # emission_factors="emission_factors.csv",   # your own month-hour factors instead

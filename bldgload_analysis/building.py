@@ -138,7 +138,7 @@ class Building:
         city, country      location, used to fetch weather and to pick the grid region
         climate            ASHRAE climate zone, e.g. 3C
         construction_year  year completed
-        source             "measured" or "simulated"
+        source             "measured" or "simulated". Simulated data skips the stuck sensor check, a constant value is real there
         emission_factors   month-hour emission factor csv or DataFrame. None: downloaded from the NLR Scenario Viewer
                            (Cambium) for the location's grid region
         cambium_year       Cambium model year, also the year in the metric names, e.g. AER_2025_annual_avg
@@ -193,7 +193,7 @@ class Building:
             sub = raw[["timestamp"] + have].rename(columns={cols[0]: "load_meas", cols[1]: "sup", cols[2]: "ret", cols[3]: "flow",
                                                              "timestamp": "datetime"})
             sub = sub[~sub.drop(columns="datetime").isna().all(axis=1)]
-            loops[lp] = clean.clean_loop(sub, "heating" if lp == "hhw" else "cooling")
+            loops[lp] = clean.clean_loop(sub, "heating" if lp == "hhw" else "cooling", stuck=source != "simulated")
         if not loops:
             raise ValueError("input needs hhw_load or chw_load, or sup, ret and flow for a loop. "
                              f"Columns read: {', '.join(raw.columns)}")
@@ -213,15 +213,23 @@ class Building:
             if c not in h:
                 h[c] = np.nan
         h = h[Hourly_cols].sort_values("timestamp").reset_index(drop=True)
-        days = (h["timestamp"].max() - h["timestamp"].min()).days
-        if days < 365:
-            meta["short_record_days"] = int(days)
-            warnings.warn(f"the record covers {days} days, less than one year. Annual values are scaled up from the "
+        first, last = h["timestamp"].min(), h["timestamp"].max()
+        hours = int((last - first) / pd.Timedelta(hours=1)) + 1          # the hours from the first to the last reading
+        short = hours < 8760
+        if short:
+            meta["short_record_days"] = hours // 24
+            warnings.warn(f"the record covers {hours // 24} days, less than one year. Annual values are scaled up from the "
                           "hours available and can be far from the real annual values")
         if select_year:
             win = clean.best_year(h)
-            start = win[0] if win else h["timestamp"].min().ceil("D")
-            n = 8784 if win and (win[1] - win[0]) > pd.Timedelta(hours=8760) else 8760
+            if win:
+                start, n = win[0], int((win[1] - win[0]) / pd.Timedelta(hours=1)) + 1
+            elif short:
+                start, n = first.ceil("D"), 8760                         # a short record starts at the next midnight
+            else:
+                start = first                                            # one year that does not start at midnight is kept whole
+                n = clean.year_hours(start)
+                n = n if start + pd.Timedelta(hours=n - 1) <= last else 8760
             frame = pd.DataFrame({"timestamp": pd.date_range(start, periods=n, freq="h")})
             h = frame.merge(h, on="timestamp", how="left")
             meta["year_start"] = str(start)
