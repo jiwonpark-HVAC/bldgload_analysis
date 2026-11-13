@@ -101,15 +101,17 @@ When `units="IP"` is selected, the metrics table, `hourly.csv`, report, and figu
 
 To retrieve metrics in SI units, use `building.metrics(units="SI")` or `building.metric(name, units="SI")`. The metrics table always includes a `unit` column.
 
-## Heat recovery COP
+## Condenser heat recovery potential
 
-The four heat recovery metrics calculate condenser heat as the cooling load multiplied by (1 + 1/COP), where COP is the cooling COP. The default value is 3, matching the example dataset.
+The coefficient of performance (COP) of a chiller is the cooling load divided by the compressor power. By energy balance, the condenser heat is the sum of the cooling load and the compressor power. So the condenser heat equals the cooling load multiplied by (1 + 1/COP).
+
+The four heat recovery metrics use this condenser heat as the heat that can be recovered for heating. The default COP is 3, matching the example dataset.
 
 Set `cop=4` in `from_csv` or `from_example` to use a different COP, or change it later with `building.cop = 4`. As a special option, `cop=0` excludes compressor power from the calculation, making condenser heat equal to the cooling load.
 
 The comparison panel uses all example buildings by default. To compare only with selected buildings, pass the result of `building.example_buildings(...)` or a list of example building IDs through `reference=`. When the COP is changed, the heat recovery comparisons use the same COP for your building and the selected example buildings.
 
-## Location-based data
+## Weather data and grid emission factors
 
 Provide `city`, or `latitude`, `longitude`, and `timezone`, to retrieve weather data and grid emission factors when they are not supplied.
 
