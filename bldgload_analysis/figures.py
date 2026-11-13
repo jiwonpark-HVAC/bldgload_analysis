@@ -4,6 +4,7 @@ import pandas as pd
 import functools
 import re
 import matplotlib.pyplot as plt
+from pathlib import Path
 from matplotlib import font_manager
 from matplotlib.colors import LinearSegmentedColormap
 
@@ -667,27 +668,62 @@ Context = [("hhw", "max_load_per_area", "peak heating load", "density"), ("chw",
            ("both", "heat_recovery_heating_peak_reduction", "HR peak reduction", "%")]
 
 
+def _building_ids(reference):
+    """The building ids when reference is a choice of example buildings, None when it is a table of metrics or a file.
+
+    A choice is the table that example_buildings() returns, or a list of building ids.
+    """
+    if isinstance(reference, pd.DataFrame):
+        if "building" in reference.columns and "variable" not in reference.columns:
+            return [str(i) for i in reference["building"]]
+        return None
+    if isinstance(reference, (str, Path)) or reference is None:
+        return None
+    return [str(i) for i in reference]
+
+
 @_styled
 def dataset_position(b, ax=None, reference=None):
-    """reference: load_summary.csv of the dataset, long format with loop, variable, value. None uses the example buildings.
+    """Where this building stands among other buildings, as a percentile for each of eight metrics.
 
-    The dataset values are for a COP of 3. With another COP the heat recovery rows of the example buildings are
-    recomputed with that COP from their hourly loads. With a reference file of your own those rows are left out.
+    reference   None                       every example building
+                building.example_buildings(...) or a list of building ids
+                                           only those example buildings
+                a load_summary.csv or its table, long format with loop, variable, value
+                                           the buildings of your own dataset
+
+    The values of the example buildings are for a COP of 3. With another COP their heat recovery rows are
+    recomputed with that COP from the hourly loads, for the chosen buildings too. A load_summary.csv of your
+    own has no hourly loads, so with another COP its heat recovery rows are left out.
     """
     ax = _ax(ax)
     from . import examples
+    title = "Position in the dataset"
     heat_recovery = None                     # the heat recovery values to compare with, when the COP is not 3
-    if reference is None:
+    ids = _building_ids(reference)
+    if reference is None or ids is not None:
         try:
-            reference = examples.reference()
+            ref = examples.reference()
         except Exception:
-            return _msg(ax, "Position in the dataset", "no reference dataset\n(use_examples or reference=)")
+            return _msg(ax, title, "no reference dataset\n(use_examples or reference=)")
         if b.cop != COP:
             try:
                 heat_recovery = examples.heat_recovery_reference(b.cop)
             except Exception:
                 heat_recovery = None
-    ref = reference if isinstance(reference, pd.DataFrame) else pd.read_csv(reference)
+        if ids is not None:
+            title = "Position in the selection"
+            known = set(ref["building"].astype(str))
+            unknown = [i for i in dict.fromkeys(ids) if i not in known]
+            if unknown:
+                raise KeyError(f"not one of the example buildings: {', '.join(unknown[:10])}")
+            if not ids:
+                return _msg(ax, title, "no example building selected")
+            ref = ref[ref["building"].astype(str).isin(ids)]
+            if heat_recovery is not None:
+                heat_recovery = heat_recovery[heat_recovery["building"].isin(ids)]
+    else:
+        ref = reference if isinstance(reference, pd.DataFrame) else pd.read_csv(reference)
     rows = []
     u = b.units
     for lp, var, lab, unit in Context:
@@ -702,14 +738,14 @@ def dataset_position(b, ax=None, reference=None):
             shown = f"{u.load_density(v):,.1f} {u.load_density_unit}" if unit == "density" else f"{v:,.1f} {unit}".strip()
             rows.append((lab, (peers < v).mean() * 100, shown, len(peers)))
     if not rows:
-        return _msg(ax, "Position in the dataset", "no comparable metrics")
+        return _msg(ax, title, "no comparable metrics")
     y = np.arange(len(rows))[::-1]
     for yi, (lab, pct, v, n) in zip(y, rows):
         ax.plot([0, 100], [yi, yi], color="#e5e5e5", lw=4, solid_capstyle="round")
         ax.plot(pct, yi, "o", color=Col["hhw"], ms=5)
         ax.text(104, yi, v, va="center", fontsize=fs(7.5), color="#404040")
     ax.axvline(50, color="#b3b3b3", lw=0.6, ls=(0, (2, 2)))
-    ax.set(title=f"Position in the dataset (n = {max(r[3] for r in rows)})", yticks=y, yticklabels=[r[0] for r in rows],
+    ax.set(title=f"{title} (n = {max(r[3] for r in rows)})", yticks=y, yticklabels=[r[0] for r in rows],
            xlabel="percentile", xlim=(0, 140), xticks=[0, 25, 50, 75, 100])
     ax.tick_params(axis="y", labelsize=fs(7.5))
     ax.grid(False)
