@@ -1,7 +1,7 @@
 # bldgload_analysis
 A Python package for analyzing building heating and cooling loads. Starting with your building’s load data, the package:
 
-- Cleans the raw data using the same protocol as the Berkeley Decarb Tool dataset.
+- Cleans and standardizes the raw load data for analysis.
 - Selects the most complete year (8,760 hours) when the data spans more than one year.
 - Retrieves outdoor weather data and grid emission factors when a building location is provided, enabling analysis of load patterns in relation to weather and associated carbon emissions.
 - Calculates 43 core metrics.
