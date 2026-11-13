@@ -75,6 +75,7 @@ Before calculating the metrics, the package cleans each loop’s data. Invalid r
 1. Small negative flow readings and negative flow readings while the plant is idle are set to zero. All other negative flow readings are treated as missing (N/A).
 2. Temperature, flow, and measured load readings outside their plausible ranges are treated as missing (N/A).
 3. Sequences of nine or more identical readings are treated as missing (N/A). This check is always applied to flow and load. For temperature, it is applied only when the sensor records increments smaller than 0.01 K. Coarser temperature readings may repeat during normal operation when the supply temperature is maintained at its setpoint.
+This check is skipped when `source="simulated"`, because constant values can be valid in simulated data.
 4. Loads are calculated from flow rates and supply–return temperature differences.
 5. Data are averaged to hourly values. Measured loads are used by default. If the difference between the measured and calculated loads exceeds both 20% and 2 kW, the calculated load is used instead.
 6. Each hour is classified as operating or off based on supply temperature, flow rate, and load.
